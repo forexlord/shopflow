@@ -16,10 +16,6 @@ export function loadUserCart(userId: string): CartItem[] {
   }
 }
 
-export function saveUserCart(userId: string, items: CartItem[]): void {
-  localStorage.setItem(getCartKey(userId), JSON.stringify(items));
-}
-
 export function clearUserCart(userId: string): void {
   localStorage.removeItem(getCartKey(userId));
 }

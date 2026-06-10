@@ -1,29 +1,43 @@
 # ShopFlow
 
-ShopFlow is a full-stack e-commerce application built as an npm workspaces monorepo. The React frontend handles browsing, authentication, and a client-side shopping cart; the Express API manages products, users, and JWT-protected admin operations backed by MongoDB.
+ShopFlow is a full-stack e-commerce application built as an npm workspaces monorepo. The React frontend provides product browsing, authentication, a per-user shopping cart, and a checkout flow; the Express API manages products, users, and JWT-protected admin operations backed by MongoDB.
 
-The project is scaffolded with clear module boundaries and several features marked as TODO — product listing and auth are wired at the route/context level but not yet fully implemented end-to-end.
+## Features
+
+- **Product catalog** — Search, category filters, price range, in-stock toggle, sort, grid/list views, and pagination
+- **Product detail** — Image gallery, breadcrumbs, quantity stepper, and add-to-cart
+- **Authentication** — Email/password login with JWT, session persistence, and protected routes
+- **Shopping cart** — Per-user cart synced to the server (cross-browser), quantity controls, and header badge
+- **Checkout** — Order summary with test purchase flow (spinner → success → cart cleared + toast)
+- **Design system** — Shared tokens, atoms, and molecules used across all pages
+- **Toast notifications** — Success and error feedback (API errors surface automatically)
+- **Seed data** — 18 sample products and 2 demo users
 
 ## Tech Stack
 
-| Layer    | Technology                                |
-| -------- | ----------------------------------------- |
-| Frontend | React 19, TypeScript, Vite, React Router  |
-| Backend  | Express 5, TypeScript, ts-node-dev        |
-| Database | MongoDB via Mongoose                      |
-| Auth     | JWT (`jsonwebtoken`) + bcryptjs (planned) |
-| Monorepo | npm workspaces + `concurrently`           |
+| Layer        | Technology                               |
+| ------------ | ---------------------------------------- |
+| Frontend     | React 19, TypeScript, Vite, React Router |
+| Styling      | CSS Modules + design tokens              |
+| Backend      | Express 5, TypeScript, ts-node-dev       |
+| Database     | MongoDB via Mongoose                     |
+| Auth         | JWT (`jsonwebtoken`) + bcryptjs          |
+| Monorepo     | npm workspaces + `concurrently`          |
 
 ## Architecture
 
 ```mermaid
 flowchart TB
   subgraph client ["Client (port 3000)"]
-    Pages["Pages: Home, Products, Login"]
+    Pages["Pages: Products, Detail, Checkout, Login"]
+    DS["Design System"]
     AuthCtx["AuthContext"]
-    CartCtx["CartContext"]
+    CartCtx["CartContext (synced via /api/cart)"]
+    ToastCtx["ToastProvider"]
+    Pages --> DS
     Pages --> AuthCtx
     Pages --> CartCtx
+    Pages --> ToastCtx
   end
 
   subgraph server ["Server (port 5000)"]
@@ -37,8 +51,8 @@ flowchart TB
   end
 
   subgraph db ["MongoDB"]
-    Users["users collection"]
-    Products["products collection"]
+    Users["users"]
+    Products["products"]
   end
 
   client -->|"HTTP (VITE_API_URL)"| server
@@ -47,10 +61,11 @@ flowchart TB
 
 ### Request flow
 
-1. **Public reads** — The client fetches products from `GET /api/products` and `GET /api/products/:id` without authentication.
-2. **Authentication** — Login posts credentials to `POST /api/auth/login`. On success, the server returns a JWT; the client stores it in `AuthContext` and sends it as `Authorization: Bearer <token>` on protected requests.
-3. **Protected writes** — `POST`, `PATCH`, and `DELETE` on `/api/products` pass through `jwtMiddleware`, which verifies the token against `JWT_SECRET` and attaches `userId` to the request.
-4. **Cart** — Cart state lives entirely in the browser via `CartContext` (in-memory, no server persistence yet).
+1. **Public reads** — `GET /api/products`, `GET /api/products/:id`, and `GET /api/products/categories` require no authentication.
+2. **Authentication** — `POST /api/auth/login` validates credentials with bcrypt and returns a JWT. The client stores the session in `localStorage` and sends `Authorization: Bearer <token>` on protected requests.
+3. **Protected writes** — `POST`, `PATCH`, and `DELETE` on `/api/products` pass through `jwtMiddleware`, which verifies the token and attaches `userId` to the request.
+4. **Cart** — Each user's cart is stored in MongoDB and accessed via JWT-protected `/api/cart` endpoints. The client syncs changes on login and debounces updates after each cart mutation, so the same cart appears on any browser or device.
+5. **Errors** — Failed API responses trigger an error toast in the top-right corner via the shared `apiClient`.
 
 ### Backend layout
 
@@ -62,38 +77,49 @@ routes → service → model (Mongoose)
 
 - **Auth** — `auth.routes.ts` → `auth.service.ts` → `users.service.ts` / `User` model
 - **Products** — `products.routes.ts` → `products.service.ts` → `Product` model
+- **Cart** — `cart.routes.ts` → `cart.service.ts` → `Cart` model
 
 Shared infrastructure lives in `config/db.ts` (MongoDB connection) and `auth/jwt.middleware.ts`.
 
 ### Frontend layout
 
-- **Routing** — `AppRouter` defines `/`, `/products`, and `/login` inside a shared `Layout` shell (header, nav, cart badge).
-- **State** — `AppProvider` wraps the app with `AuthProvider` and `CartProvider`.
-- **API access** — The client reads the backend base URL from `VITE_API_URL` (see `ProductsPage`).
+- **Routing** — `AppRouter` defines `/` (products), `/products/:productId`, `/checkout`, and `/login`. Authenticated pages share a `Layout` shell (`AppHeader`, `AppFooter`).
+- **State** — `AppProvider` wraps `AuthProvider`, `CartProvider`, `ToastProvider`, and `ProductFiltersProvider`.
+- **Features** — Domain logic lives under `features/` (`auth`, `products`, `cart`).
+- **Design system** — Reusable UI in `design-system/` (tokens, atoms, molecules).
+- **API** — `api/client.ts` centralizes fetch, error handling, and toast notifications.
 
 ## Project Structure
 
 ```
 shopflow/
-├── package.json          # Root workspace scripts
+├── package.json              # Root workspace scripts
 ├── client/
 │   ├── src/
-│   │   ├── components/   # Layout shell
-│   │   ├── context/      # Auth + Cart providers
-│   │   ├── pages/        # Home, Products, Login
-│   │   └── routes/       # React Router config
+│   │   ├── api/              # apiClient, auth/products API, toast bridge
+│   │   ├── components/       # AppHeader, AppFooter, Layout
+│   │   ├── context/          # Auth, Cart, Toast providers
+│   │   ├── design-system/    # Tokens, atoms, molecules
+│   │   ├── features/
+│   │   │   ├── auth/         # Login form
+│   │   │   ├── cart/         # Checkout view, cart items, storage
+│   │   │   └── products/     # Filters, grid, detail, hooks
+│   │   ├── pages/            # Products, Detail, Checkout, Login
+│   │   └── routes/           # Router, ProtectedRoute, GuestRoute
 │   ├── vite.config.ts
-│   └── .env.local        # VITE_API_URL
+│   └── .env.local            # VITE_API_URL
 └── server/
     ├── src/
-    │   ├── auth/         # Login route, JWT middleware, DTOs
-    │   ├── products/     # CRUD routes, service, model, DTOs
-    │   ├── users/        # User model + lookup service
-    │   ├── config/       # Database connection
-    │   ├── app.ts        # Express app factory
-    │   ├── main.ts       # Entry point
-    │   └── seed.ts       # Database seed script
-    └── .env              # PORT, MONGO_URI, JWT_SECRET
+    │   ├── auth/             # Login, JWT middleware, DTOs
+    │   ├── cart/             # Per-user cart API, model
+    │   ├── products/         # CRUD, query parser, mapper, model
+    │   ├── users/            # User model + lookup service
+    │   ├── seed/             # Seed data and runners
+    │   ├── config/           # Database connection
+    │   ├── app.ts            # Express app factory
+    │   ├── main.ts           # Entry point
+    │   └── seed.ts           # Database seed entry point
+    └── .env                  # PORT, MONGO_URI, JWT_SECRET
 ```
 
 ## Prerequisites
@@ -140,13 +166,16 @@ VITE_API_URL=http://localhost:5000
 | -------------- | ----------------------------------------------- |
 | `VITE_API_URL` | Base URL of the Express API (no trailing slash) |
 
-### 3. Seed the database (optional)
+### 3. Seed the database
 
 ```bash
 npm run seed
 ```
 
-The seed script connects to MongoDB and clears existing `Product` and `User` documents. Sample data insertion is not yet implemented.
+This clears and re-inserts seed data:
+
+- **2 users** — `admin@shopflow.com`, `shopper@shopflow.com` (password: `password123`)
+- **18 products** — across categories like Electronics, Footwear, Apparel, and Home
 
 ### 4. Run in development
 
@@ -156,19 +185,37 @@ From the project root:
 npm run dev
 ```
 
-This starts both services concurrently:
-
 | Service          | URL                   |
 | ---------------- | --------------------- |
 | Client (Vite)    | http://localhost:3000 |
 | Server (Express) | http://localhost:5000 |
 
-Verify the API with:
+Verify the API:
 
 ```bash
 curl http://localhost:5000/health
 # {"status":"ok"}
 ```
+
+### 5. Sign in
+
+Open http://localhost:3000 — unauthenticated users are redirected to `/login`.
+
+| Email                  | Password      | Role        |
+| ---------------------- | ------------- | ----------- |
+| `shopper@shopflow.com` | `password123` | Demo shopper |
+| `admin@shopflow.com`   | `password123` | Admin user  |
+
+After login, browse products, add items to your cart, and visit `/checkout` to review the order summary.
+
+## Client Routes
+
+| Path                  | Access    | Description                          |
+| --------------------- | --------- | ------------------------------------ |
+| `/login`              | Guest     | Sign-in form                         |
+| `/`                   | Protected | Product catalog with filters         |
+| `/products/:productId`| Protected | Product detail page                  |
+| `/checkout`           | Protected | Cart and order summary               |
 
 ## Scripts
 
@@ -180,21 +227,38 @@ Run from the **repository root**:
 | `npm run build:client` | Type-check and build the Vite app to `client/dist` |
 | `npm run build:server` | Compile server TypeScript to `server/dist`         |
 | `npm run start:server` | Run the compiled server (`node dist/main.js`)      |
-| `npm run seed`         | Run the database seed script                       |
+| `npm run seed`         | Seed users and products                            |
 
 Workspace-specific scripts are also available, e.g. `npm run dev --workspace=client`.
 
 ## API Reference
 
-| Method   | Endpoint            | Auth | Status      |
-| -------- | ------------------- | ---- | ----------- |
-| `GET`    | `/health`           | —    | Implemented |
-| `POST`   | `/api/auth/login`   | —    | Stub (501)  |
-| `GET`    | `/api/products`     | —    | Implemented |
-| `GET`    | `/api/products/:id` | —    | Implemented |
-| `POST`   | `/api/products`     | JWT  | Stub (501)  |
-| `PATCH`  | `/api/products/:id` | JWT  | Stub (501)  |
-| `DELETE` | `/api/products/:id` | JWT  | Stub (501)  |
+| Method   | Endpoint                    | Auth | Description              |
+| -------- | --------------------------- | ---- | ------------------------ |
+| `GET`    | `/health`                   | —    | Health check             |
+| `POST`   | `/api/auth/login`           | —    | Login, returns JWT       |
+| `GET`    | `/api/products`             | —    | List products (filtered) |
+| `GET`    | `/api/products/categories`  | —    | Distinct categories      |
+| `GET`    | `/api/products/:id`         | —    | Single product           |
+| `POST`   | `/api/products`             | JWT  | Create product           |
+| `PATCH`  | `/api/products/:id`         | JWT  | Update product           |
+| `DELETE` | `/api/products/:id`         | JWT  | Delete product           |
+| `GET`    | `/api/cart`                 | JWT  | Get current user's cart  |
+| `PUT`    | `/api/cart`                 | JWT  | Replace cart items       |
+| `DELETE` | `/api/cart`                 | JWT  | Clear cart               |
+
+### Product list query parameters
+
+| Parameter     | Type     | Description                                      |
+| ------------- | -------- | ------------------------------------------------ |
+| `search`      | string   | Text search on name and description              |
+| `categories`  | string   | Comma-separated category names                   |
+| `minPrice`    | number   | Minimum price                                    |
+| `maxPrice`    | number   | Maximum price                                    |
+| `inStockOnly` | boolean  | `"true"` to exclude out-of-stock items           |
+| `sort`        | string   | `newest`, `price-asc`, `price-desc`, or `popular`|
+| `page`        | number   | Page number (1-based)                            |
+| `limit`       | number   | Items per page                                   |
 
 ### Product schema
 
@@ -206,13 +270,14 @@ Workspace-specific scripts are also available, e.g. `npm run dev --workspace=cli
 | `imageUrl`    | string | no               |
 | `category`    | string | no               |
 | `stock`       | number | no (default `0`) |
+| `popularity`  | number | no (default `0`) |
 
 ### User schema
 
 | Field      | Type   | Required     |
 | ---------- | ------ | ------------ |
 | `email`    | string | yes (unique) |
-| `password` | string | yes          |
+| `password` | string | yes (hashed) |
 | `name`     | string | yes          |
 
 ## Production Build
@@ -230,13 +295,17 @@ npm run build:client
 
 ## Implementation Status
 
-| Area                        | Status                                  |
-| --------------------------- | --------------------------------------- |
-| Monorepo + dev tooling      | Done                                    |
-| MongoDB connection + models | Done                                    |
-| Product read endpoints      | Done                                    |
-| Product write endpoints     | Routes + middleware wired; service TODO |
-| Auth login                  | Route wired; service + client TODO      |
-| Client cart                 | In-memory state done                    |
-| Client product listing      | Placeholder page                        |
-| Database seed data          | Clears collections only                 |
+| Area                         | Status                                      |
+| ---------------------------- | ------------------------------------------- |
+| Monorepo + dev tooling       | Done                                        |
+| Design system                | Done                                        |
+| MongoDB models + connection  | Done                                        |
+| Auth (login, JWT, bcrypt)    | Done                                        |
+| Product read/write API       | Done                                        |
+| Database seed data           | Done (18 products, 2 users)                 |
+| Product catalog UI           | Done                                        |
+| Product detail UI            | Done                                        |
+| Per-user cart + checkout UI  | Done (server-synced cart, test purchase flow) |
+| Toast notifications        | Done                                        |
+| Admin product management UI  | Not started (API available)                 |
+| Real payment / orders API    | Not started                                 |
