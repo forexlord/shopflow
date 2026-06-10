@@ -24,8 +24,8 @@ export default function ProductDetailPage() {
     return (
       <div className={styles.page}>
         <div className={styles.state}>
-          <Text variant="body-md" color="danger">
-            {error || "Product not found"}
+          <Text variant="body-md" color="secondary">
+            {error ? "Unable to load this product." : "Product not found"}
           </Text>
           <Link to="/" variant="default">
             Back to products

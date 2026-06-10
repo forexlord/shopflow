@@ -13,7 +13,7 @@ export function AppFooter() {
       <div className={styles.brand}>
         <Text variant="label-md">ShopFlow</Text>
         <Text variant="label-sm" color="secondary">
-          © 2024 ShopFlow. All rights reserved.
+          © 2026 ShopFlow. All rights reserved.
         </Text>
       </div>
       <div className={styles.links}>

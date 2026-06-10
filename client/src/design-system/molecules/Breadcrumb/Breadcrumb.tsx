@@ -31,10 +31,8 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
               />
             ) : null}
             {item.to && !isLast ? (
-              <Link to={item.to} variant="inline" className={styles.link}>
-                <Text variant="label-sm" color="secondary">
-                  {item.label}
-                </Text>
+              <Link to={item.to} variant="muted">
+                {item.label}
               </Link>
             ) : (
               <Text

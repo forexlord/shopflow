@@ -2,35 +2,51 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
 import type { ReactNode } from "react";
+import { registerToastNotifier, type ToastVariant } from "../api/toastBridge";
 import { Icon, Text } from "../design-system";
+import { cx } from "../design-system/utils/cx";
 import styles from "./ToastContext.module.css";
 
 interface Toast {
   id: number;
   message: string;
+  variant: ToastVariant;
 }
 
 interface ToastContextValue {
-  showToast: (message: string) => void;
+  showToast: (message: string, variant?: ToastVariant) => void;
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
+const toastIcons: Record<ToastVariant, string> = {
+  success: "check_circle",
+  error: "error",
+};
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((message: string) => {
-    const id = Date.now();
-    setToasts((current) => [...current, { id, message }]);
+  const showToast = useCallback(
+    (message: string, variant: ToastVariant = "success") => {
+      const id = Date.now();
+      setToasts((current) => [...current, { id, message, variant }]);
 
-    window.setTimeout(() => {
-      setToasts((current) => current.filter((toast) => toast.id !== id));
-    }, 4000);
-  }, []);
+      window.setTimeout(() => {
+        setToasts((current) => current.filter((toast) => toast.id !== id));
+      }, 4000);
+    },
+    []
+  );
+
+  useEffect(() => {
+    registerToastNotifier(showToast);
+  }, [showToast]);
 
   const value = useMemo(() => ({ showToast }), [showToast]);
 
@@ -39,8 +55,21 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <div className={styles.container} aria-live="polite">
         {toasts.map((toast) => (
-          <div key={toast.id} className={styles.toast}>
-            <Icon name="check_circle" size="sm" className={styles.icon} />
+          <div
+            key={toast.id}
+            className={cx(
+              styles.toast,
+              toast.variant === "error" && styles.error
+            )}
+          >
+            <Icon
+              name={toastIcons[toast.variant]}
+              size="sm"
+              className={cx(
+                styles.icon,
+                toast.variant === "error" && styles.iconError
+              )}
+            />
             <Text variant="label-md">{toast.message}</Text>
           </div>
         ))}

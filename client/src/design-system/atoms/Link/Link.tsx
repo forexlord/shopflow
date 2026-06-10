@@ -31,6 +31,7 @@ const variantStyles: Record<LinkVariant, string> = {
   nav: styles.nav,
   "nav-active": styles["nav-active"],
   inline: styles.inline,
+  muted: styles.muted,
 };
 
 export function Link({

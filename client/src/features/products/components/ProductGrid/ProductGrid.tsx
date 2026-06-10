@@ -25,8 +25,8 @@ export function ProductGrid({ products, view, isLoading, error }: ProductGridPro
   if (error) {
     return (
       <div className={styles.state}>
-        <Text variant="body-md" color="danger">
-          {error}
+        <Text variant="body-md" color="secondary">
+          Unable to load products. Please try again.
         </Text>
       </div>
     );

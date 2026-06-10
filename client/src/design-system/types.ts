@@ -16,7 +16,12 @@ export type BadgeVariant = "category" | "success" | "danger" | "neutral";
 
 export type CardVariant = "flat" | "bordered" | "interactive";
 
-export type LinkVariant = "default" | "nav" | "nav-active" | "inline";
+export type LinkVariant =
+  | "default"
+  | "nav"
+  | "nav-active"
+  | "inline"
+  | "muted";
 
 export type LabelVariant = "default" | "muted";
 

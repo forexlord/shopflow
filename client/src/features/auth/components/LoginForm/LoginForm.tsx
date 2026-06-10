@@ -99,12 +99,6 @@ export function LoginForm() {
           />
         </div>
 
-        {error && (
-          <Text variant="body-md" color="danger" className={styles.error}>
-            {error}
-          </Text>
-        )}
-
         <Spacer size="xs" />
 
         <Button type="submit" variant="primary" size="md" fullWidth disabled={isSubmitting}>

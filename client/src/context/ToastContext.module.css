@@ -26,6 +26,14 @@
   color: var(--color-success);
 }
 
+.iconError {
+  color: var(--color-error);
+}
+
+.error {
+  border-color: color-mix(in srgb, var(--color-error) 30%, var(--color-outline-variant));
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;

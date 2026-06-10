@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Button,
-  Divider,
-  Icon,
-  Input,
-  Spinner,
-  Text,
-} from "../../../../design-system";
+import { Button, Divider, Icon, Spinner, Text } from "../../../../design-system";
 import { useCart } from "../../../../context/CartContext";
 import { useToast } from "../../../../context/ToastContext";
 import { formatPrice } from "../../../products/utils/formatPrice";
@@ -19,7 +12,6 @@ export function OrderSummary() {
   const { subtotal, clearCart } = useCart();
   const { showToast } = useToast();
   const [checkoutState, setCheckoutState] = useState<CheckoutState>("idle");
-  const [promoCode, setPromoCode] = useState("");
 
   const isProcessing = checkoutState !== "idle";
 
@@ -32,7 +24,7 @@ export function OrderSummary() {
 
     setCheckoutState("success");
     clearCart();
-    showToast("Test purchase successful");
+    showToast("Test purchase successful", "success");
 
     window.setTimeout(() => {
       setCheckoutState("idle");
@@ -77,19 +69,6 @@ export function OrderSummary() {
       <div className={styles.line}>
         <Text variant="headline-sm">Total</Text>
         <Text variant="headline-sm">{formatPrice(subtotal)}</Text>
-      </div>
-
-      <div className={styles.promo}>
-        <Input
-          className={styles.promoInput}
-          placeholder="Promo code"
-          value={promoCode}
-          onChange={(event) => setPromoCode(event.target.value)}
-          aria-label="Promo code"
-        />
-        <Button variant="secondary" type="button">
-          Apply
-        </Button>
       </div>
 
       <div className={styles.checkout}>

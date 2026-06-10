@@ -1,3 +1,5 @@
+import { notifyToast } from "./toastBridge";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 export class ApiError extends Error {
@@ -21,15 +23,23 @@ export async function apiClient<T>(
 ): Promise<T> {
   const { body, token, headers, ...rest } = options;
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...rest,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      ...rest,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers,
+      },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    const message = "Unable to reach the server. Please try again.";
+    notifyToast(message, "error");
+    throw new ApiError(message, 0);
+  }
 
   const data = await response.json().catch(() => null);
 
@@ -38,6 +48,7 @@ export async function apiClient<T>(
       data && typeof data.message === "string"
         ? data.message
         : "Request failed";
+    notifyToast(message, "error");
     throw new ApiError(message, response.status);
   }
 

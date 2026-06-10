@@ -23,15 +23,6 @@
   align-items: center;
 }
 
-.promo {
-  display: flex;
-  gap: var(--space-sm);
-}
-
-.promoInput {
-  flex: 1;
-}
-
 .checkout {
   display: flex;
   flex-direction: column;
