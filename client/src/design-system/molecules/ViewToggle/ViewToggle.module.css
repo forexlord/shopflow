@@ -1,0 +1,30 @@
+.group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 4px;
+  background-color: var(--color-surface);
+  border: var(--border-width-default) solid var(--color-outline-variant);
+  border-radius: var(--radius-default);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  color: var(--color-secondary);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.button:hover {
+  background-color: var(--color-surface-container-low);
+}
+
+.active {
+  background-color: var(--color-surface-container-low);
+  color: var(--color-primary-container);
+}

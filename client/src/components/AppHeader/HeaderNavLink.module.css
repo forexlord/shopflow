@@ -1,0 +1,28 @@
+.link {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-label-md-weight);
+  color: var(--color-on-surface-variant);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.link:hover {
+  color: var(--color-on-surface);
+  background-color: color-mix(in srgb, var(--color-surface-container) 60%, transparent);
+}
+
+.active {
+  color: var(--color-primary-container);
+  background-color: var(--color-bg-primary);
+  box-shadow: 0 1px 2px rgba(26, 28, 29, 0.06);
+  font-weight: 600;
+}
+
+.active:hover {
+  color: var(--color-primary-container);
+  background-color: var(--color-bg-primary);
+}

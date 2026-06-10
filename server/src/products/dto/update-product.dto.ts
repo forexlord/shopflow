@@ -5,4 +5,5 @@ export interface UpdateProductDto {
   imageUrl?: string;
   category?: string;
   stock?: number;
+  popularity?: number;
 }

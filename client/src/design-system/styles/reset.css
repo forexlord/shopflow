@@ -4,8 +4,13 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
+  overflow-x: hidden;
   font-family: var(--font-family);
   font-size: var(--font-body-md-size);
   font-weight: var(--font-body-md-weight);

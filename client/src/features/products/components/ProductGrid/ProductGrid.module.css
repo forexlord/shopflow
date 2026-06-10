@@ -1,0 +1,30 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+.gridMode {
+  grid-template-columns: 1fr;
+}
+
+.listMode {
+  grid-template-columns: 1fr;
+}
+
+.state {
+  padding: var(--space-xl) 0;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .gridMode {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .gridMode {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

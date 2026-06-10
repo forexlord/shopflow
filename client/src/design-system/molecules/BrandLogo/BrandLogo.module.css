@@ -15,6 +15,18 @@
   color: var(--color-on-primary);
 }
 
+.compact .mark {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+}
+
 .name {
   letter-spacing: -0.01em;
+}
+
+.compact .name {
+  font-size: var(--font-headline-sm-size);
+  font-weight: var(--font-headline-sm-weight);
+  line-height: var(--font-headline-sm-line-height);
 }

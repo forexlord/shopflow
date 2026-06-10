@@ -1,3 +1,10 @@
 export { BrandLogo } from "./BrandLogo/BrandLogo";
+export type { BrandLogoProps } from "./BrandLogo/BrandLogo";
+export { Pagination } from "./Pagination/Pagination";
+export type { PaginationProps } from "./Pagination/Pagination";
 export { PasswordInput } from "./PasswordInput/PasswordInput";
 export type { PasswordInputProps } from "./PasswordInput/PasswordInput";
+export { SearchInput } from "./SearchInput/SearchInput";
+export type { SearchInputProps } from "./SearchInput/SearchInput";
+export { ViewToggle } from "./ViewToggle/ViewToggle";
+export type { ViewMode, ViewToggleProps } from "./ViewToggle/ViewToggle";

@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
-import { Product } from "./products/models/product.model";
+import { seedProducts } from "./seed/seed-products";
 import { seedUsers } from "./seed/seed-users";
 
 dotenv.config();
@@ -8,8 +8,8 @@ dotenv.config();
 async function seed() {
   await connectDB();
 
-  await Product.deleteMany({});
   await seedUsers();
+  await seedProducts();
 
   console.log("Seed complete");
   process.exit(0);

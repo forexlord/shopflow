@@ -1,0 +1,104 @@
+.wrapper {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  left: var(--space-md);
+  transform: translateY(-50%);
+  color: var(--color-secondary);
+  pointer-events: none;
+}
+
+.input {
+  padding-left: 40px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.compact .input {
+  border-radius: var(--radius-default);
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  height: auto;
+  padding-block: var(--space-xs);
+}
+
+.compact .input:focus {
+  box-shadow: none;
+  border: none;
+}
+
+.compactWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1;
+  min-width: 0;
+  max-width: 192px;
+  padding: var(--space-xs) var(--space-sm);
+  background-color: var(--color-surface-container-low);
+  border: var(--border-width-default) solid var(--color-outline-variant);
+  border-radius: var(--radius-default);
+}
+
+.compactWrapper .icon {
+  position: static;
+  transform: none;
+}
+
+.compactWrapper .input {
+  width: 100%;
+  min-width: 0;
+  padding-left: 0;
+}
+
+.navbarWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  min-width: 0;
+  max-width: 300px;
+  height: 40px;
+  padding-inline: var(--space-md);
+  background-color: var(--color-surface-container-low);
+  border: var(--border-width-default) solid transparent;
+  border-radius: var(--radius-full);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.navbarWrapper:focus-within {
+  background-color: var(--color-bg-primary);
+  border-color: var(--color-outline-variant);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.navbarIcon {
+  flex-shrink: 0;
+  color: var(--color-on-surface-variant);
+}
+
+.navbarInput {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.navbarInput:focus {
+  border: none;
+  box-shadow: none;
+}
+
+.navbarInput::placeholder {
+  color: var(--color-text-secondary);
+}

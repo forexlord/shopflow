@@ -1,0 +1,28 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+}
+
+.input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--color-primary-container);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.label {
+  font-family: var(--font-family);
+  font-size: var(--font-body-md-size);
+  font-weight: var(--font-body-md-weight);
+  line-height: var(--font-body-md-line-height);
+  color: var(--color-on-surface);
+  transition: color var(--transition-fast);
+}
+
+.wrapper:hover .label {
+  color: var(--color-primary-container);
+}

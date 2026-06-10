@@ -1,0 +1,38 @@
+.wrapper {
+  position: relative;
+}
+
+.button {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  color: var(--color-on-surface-variant);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.button:hover {
+  color: var(--color-primary-container);
+  background-color: var(--color-surface-container-low);
+}
+
+.badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding-inline: 4px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary);
+  font-family: var(--font-family);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}

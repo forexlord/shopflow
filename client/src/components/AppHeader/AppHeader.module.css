@@ -1,0 +1,125 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  height: var(--nav-height);
+  padding-inline: var(--space-margin-mobile);
+  background-color: color-mix(in srgb, var(--color-bg-primary) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: var(--border-width-default) solid var(--color-outline-variant);
+  box-shadow: 0 1px 2px rgba(26, 28, 29, 0.04);
+}
+
+.brandLink {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.center {
+  display: none;
+  justify-content: center;
+  min-width: 0;
+}
+
+.searchSlot {
+  width: 100%;
+  max-width: 360px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.nav {
+  display: none;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 4px;
+  background-color: var(--color-surface-container-low);
+  border-radius: var(--radius-default);
+}
+
+.userCluster {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 4px 4px 4px 6px;
+  border: var(--border-width-default) solid var(--color-outline-variant);
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg-primary);
+}
+
+.actionButton {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  color: var(--color-on-surface-variant);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.actionButton:hover {
+  color: var(--color-primary-container);
+  background-color: var(--color-surface-container-low);
+}
+
+.logoutButton {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .header {
+    padding-inline: var(--space-gutter);
+    gap: var(--space-lg);
+  }
+
+  .center {
+    display: flex;
+  }
+
+  .right {
+    gap: var(--space-md);
+  }
+
+  .logoutButton {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .nav {
+    display: flex;
+  }
+}
+
+.searchDesktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .header {
+    grid-template-columns: auto auto 1fr auto;
+  }
+
+  .center {
+    display: none;
+  }
+
+  .searchDesktop {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 0;
+    max-width: 300px;
+  }
+}

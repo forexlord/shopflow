@@ -1,0 +1,13 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+  overflow-x: hidden;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  padding-top: var(--nav-height);
+}

@@ -24,7 +24,9 @@
 
 .nav-active {
   color: var(--color-primary-container);
-  font-weight: var(--font-label-md-weight);
+  font-weight: 700;
+  border-bottom: 2px solid var(--color-primary-container);
+  padding-bottom: 4px;
 }
 
 .inline {

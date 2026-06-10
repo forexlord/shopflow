@@ -17,6 +17,16 @@
 
   /* Navigation */
   --nav-height: 64px;
+  --sidebar-width: 240px;
+
+  /* Product filters */
+  --price-range-max: 1000;
+  --products-per-page: 6;
+
+  /* Breakpoints (for reference in media queries) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
 
   /* Transitions */
   --transition-fast: 150ms ease;

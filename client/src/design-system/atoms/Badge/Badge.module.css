@@ -19,8 +19,9 @@
 }
 
 .category {
-  background-color: var(--color-pill-bg);
-  color: var(--color-pill-text);
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  text-transform: uppercase;
 }
 
 .success {
