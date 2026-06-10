@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Badge,
   Button,
@@ -15,9 +16,14 @@ import styles from "./ProductDetailPanel.module.css";
 
 export interface ProductDetailPanelProps {
   product: Product;
+  isAdmin?: boolean;
 }
 
-export function ProductDetailPanel({ product }: ProductDetailPanelProps) {
+export function ProductDetailPanel({
+  product,
+  isAdmin = false,
+}: ProductDetailPanelProps) {
+  const navigate = useNavigate();
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
   const inStock = product.stock > 0;
@@ -77,15 +83,29 @@ export function ProductDetailPanel({ product }: ProductDetailPanelProps) {
           <StockStatus stock={product.stock} />
         </div>
 
-        <Button
-          variant="primary"
-          size="lg"
-          disabled={!inStock}
-          onClick={handleAddToCart}
-        >
-          <Icon name="shopping_bag" size="sm" />
-          Add to Cart
-        </Button>
+        <div className={styles.buttonRow}>
+          <Button
+            variant="primary"
+            size="lg"
+            className={styles.addToCart}
+            disabled={!inStock}
+            onClick={handleAddToCart}
+          >
+            <Icon name="shopping_bag" size="sm" />
+            Add to Cart
+          </Button>
+          {isAdmin ? (
+            <Button
+              variant="secondary"
+              size="lg"
+              className={styles.editButton}
+              onClick={() => navigate(`/products/${product.id}/edit`)}
+            >
+              <Icon name="edit" size="sm" />
+              Edit product
+            </Button>
+          ) : null}
+        </div>
       </section>
     </div>
   );

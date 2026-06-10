@@ -46,3 +46,13 @@ export interface CreateProductPayload {
   stock?: number;
   popularity?: number;
 }
+
+export interface UpdateProductPayload {
+  name?: string;
+  description?: string;
+  price?: number;
+  imageUrl?: string;
+  category?: string;
+  stock?: number;
+  popularity?: number;
+}

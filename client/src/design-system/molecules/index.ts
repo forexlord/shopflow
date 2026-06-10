@@ -1,3 +1,6 @@
+export { ConfirmDialog } from "./ConfirmDialog/ConfirmDialog";
+export type { ConfirmDialogProps } from "./ConfirmDialog/ConfirmDialog";
+
 export { Breadcrumb } from "./Breadcrumb/Breadcrumb";
 export type { BreadcrumbItem, BreadcrumbProps } from "./Breadcrumb/Breadcrumb";
 

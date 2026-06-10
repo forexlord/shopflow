@@ -62,3 +62,18 @@
     justify-content: space-between;
   }
 }
+
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.addToCart {
+  width: 200px;
+}
+
+.editButton {
+  flex: 1;
+  min-width: 160px;
+}

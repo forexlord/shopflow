@@ -226,6 +226,8 @@ After login, browse products, add items to your cart, and visit `/checkout` to r
 | `/login`              | Guest     | Sign-in form                         |
 | `/`                   | Protected | Product catalog with filters         |
 | `/products/:productId`| Protected | Product detail page                  |
+| `/products/new`       | Admin     | Create product form                  |
+| `/products/:id/edit`  | Admin     | Edit product form                    |
 | `/checkout`           | Protected | Cart and order summary               |
 
 ## Scripts
@@ -333,5 +335,5 @@ VITE_API_URL=http://your-ec2-public-ip:5000 npm run build:client
 | Product detail UI            | Done                                        |
 | Per-user cart + checkout UI  | Done (server-synced cart, test purchase flow) |
 | Toast notifications        | Done                                        |
-| Admin product management UI  | Not started (API available)                 |
+| Admin product management UI  | Done (create, edit, delete for admin user)  |
 | Real payment / orders API    | Not started                                 |

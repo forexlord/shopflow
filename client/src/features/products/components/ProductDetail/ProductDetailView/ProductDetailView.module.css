@@ -36,3 +36,20 @@
     width: 45%;
   }
 }
+
+.adminFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: var(--border-width-default) solid var(--color-outline-variant);
+}
+
+.deleteButton {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-error-container) 20%, transparent);
+}

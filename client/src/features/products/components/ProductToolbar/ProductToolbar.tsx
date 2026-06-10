@@ -15,20 +15,24 @@ export interface ProductToolbarProps {
   filters: ProductFilters;
   total: number;
   activeFilterCount: number;
+  showCreateButton?: boolean;
   onOpenFilters: () => void;
   onSearchChange: (search: string) => void;
   onSortChange: (sort: ProductSortOption) => void;
   onViewChange: (view: ProductViewMode) => void;
+  onCreateProduct?: () => void;
 }
 
 export function ProductToolbar({
   filters,
   total,
   activeFilterCount,
+  showCreateButton = false,
   onOpenFilters,
   onSearchChange,
   onSortChange,
   onViewChange,
+  onCreateProduct,
 }: ProductToolbarProps) {
   return (
     <div className={styles.toolbar}>
@@ -44,6 +48,17 @@ export function ProductToolbar({
         </Text>
 
         <div className={styles.actions}>
+          {showCreateButton ? (
+            <Button
+              type="button"
+              variant="primary"
+              size="md"
+              onClick={onCreateProduct}
+            >
+              <Icon name="add" size="sm" />
+              Create product
+            </Button>
+          ) : null}
           <Button
             type="button"
             variant="secondary"

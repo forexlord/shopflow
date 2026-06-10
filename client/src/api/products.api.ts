@@ -3,6 +3,7 @@ import type {
   Product,
   ProductFilters,
   ProductListResponse,
+  UpdateProductPayload,
 } from "../types/product.types";
 import { apiClient } from "./client";
 
@@ -47,6 +48,12 @@ export function fetchProductById(id: string): Promise<Product> {
   return apiClient<Product>(`/api/products/${id}`);
 }
 
+export function fetchCategories(): Promise<string[]> {
+  return apiClient<{ categories: string[] }>("/api/products/categories").then(
+    (response) => response.categories
+  );
+}
+
 export function createProduct(
   payload: CreateProductPayload,
   token: string
@@ -54,6 +61,25 @@ export function createProduct(
   return apiClient<Product>("/api/products", {
     method: "POST",
     body: payload,
+    token,
+  });
+}
+
+export function updateProduct(
+  id: string,
+  payload: UpdateProductPayload,
+  token: string
+): Promise<Product> {
+  return apiClient<Product>(`/api/products/${id}`, {
+    method: "PATCH",
+    body: payload,
+    token,
+  });
+}
+
+export function deleteProduct(id: string, token: string): Promise<Product> {
+  return apiClient<Product>(`/api/products/${id}`, {
+    method: "DELETE",
     token,
   });
 }

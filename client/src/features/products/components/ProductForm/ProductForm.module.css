@@ -1,0 +1,86 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 640px) {
+  .row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.priceWrap {
+  position: relative;
+}
+
+.pricePrefix {
+  position: absolute;
+  left: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  pointer-events: none;
+}
+
+.priceInput {
+  padding-left: calc(var(--space-md) + 12px);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-family);
+  font-size: var(--font-body-md-size);
+  font-weight: var(--font-body-md-weight);
+  line-height: var(--font-body-md-line-height);
+  color: var(--color-on-surface);
+  background-color: var(--color-surface-bright);
+  border: var(--border-width-default) solid var(--color-outline-variant);
+  border-radius: var(--radius-default);
+  outline: none;
+  resize: vertical;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.textarea:focus {
+  border-color: var(--color-primary-container);
+  box-shadow: 0 0 0 var(--border-width-focus) var(--color-focus-ring);
+}
+
+.hint {
+  margin-top: var(--space-xs);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-md);
+  padding-top: var(--space-lg);
+  border-top: var(--border-width-default) solid var(--color-outline-variant);
+}
+
+.submitButton {
+  min-width: 160px;
+}
+
+.submitButton.success {
+  background-color: var(--color-success);
+}

@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Pagination } from "../design-system";
+import { useAuth } from "../context/AuthContext";
 import { ProductFiltersPanel } from "../features/products/components/ProductFilters/ProductFilters";
 import { ProductGrid } from "../features/products/components/ProductGrid/ProductGrid";
 import { ProductToolbar } from "../features/products/components/ProductToolbar/ProductToolbar";
 import { useProductFilters } from "../features/products/hooks/useProductFilters";
 import { useProducts } from "../features/products/hooks/useProducts";
 import { getActiveFilterCount } from "../features/products/utils/getActiveFilterCount";
+import { isAdmin } from "../features/products/utils/isAdmin";
 import styles from "./ProductsPage.module.css";
 
 export default function ProductsPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const { filters, updateFilters, clearFilters, toggleCategory } =
     useProductFilters();
   const { data, isLoading, error } = useProducts(filters);
@@ -43,6 +48,8 @@ export default function ProductsPage() {
           filters={filters}
           total={data?.total ?? 0}
           activeFilterCount={getActiveFilterCount(filters)}
+          showCreateButton={isAdmin(user)}
+          onCreateProduct={() => navigate("/products/new")}
           onOpenFilters={() => setFiltersOpen(true)}
           onSearchChange={(search) => updateFilters({ search })}
           onSortChange={(sort) => updateFilters({ sort })}
