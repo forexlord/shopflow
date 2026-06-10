@@ -1,0 +1,7 @@
+:root {
+  --shadow-none: none;
+  --shadow-card-hover: 0 4px 12px rgba(79, 70, 229, 0.04);
+  --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --border-width-default: 1px;
+  --border-width-focus: 2px;
+}

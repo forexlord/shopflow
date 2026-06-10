@@ -1,0 +1,39 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family);
+  font-size: var(--font-label-sm-size);
+  font-weight: var(--font-label-sm-weight);
+  line-height: var(--font-label-sm-line-height);
+  border-radius: var(--radius-full);
+  padding: var(--space-xs) var(--space-sm);
+  white-space: nowrap;
+}
+
+.micro {
+  font-size: var(--font-micro-size);
+  font-weight: var(--font-micro-weight);
+  line-height: var(--font-micro-line-height);
+  letter-spacing: var(--font-micro-letter-spacing);
+}
+
+.category {
+  background-color: var(--color-pill-bg);
+  color: var(--color-pill-text);
+}
+
+.success {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: var(--color-success);
+}
+
+.danger {
+  background-color: var(--color-error-container);
+  color: var(--color-danger);
+}
+
+.neutral {
+  background-color: var(--color-surface-container);
+  color: var(--color-on-surface-variant);
+}

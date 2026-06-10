@@ -1,0 +1,44 @@
+:root {
+  --font-family: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Headlines */
+  --font-headline-xl-size: 28px;
+  --font-headline-xl-weight: 700;
+  --font-headline-xl-line-height: 36px;
+
+  --font-headline-lg-size: 24px;
+  --font-headline-lg-weight: 600;
+  --font-headline-lg-line-height: 32px;
+
+  --font-headline-md-size: 20px;
+  --font-headline-md-weight: 600;
+  --font-headline-md-line-height: 28px;
+
+  --font-headline-sm-size: 18px;
+  --font-headline-sm-weight: 600;
+  --font-headline-sm-line-height: 26px;
+
+  /* Body */
+  --font-body-lg-size: 16px;
+  --font-body-lg-weight: 400;
+  --font-body-lg-line-height: 26px;
+
+  --font-body-md-size: 14px;
+  --font-body-md-weight: 400;
+  --font-body-md-line-height: 22.4px;
+
+  /* Labels */
+  --font-label-md-size: 14px;
+  --font-label-md-weight: 500;
+  --font-label-md-line-height: 20px;
+
+  --font-label-sm-size: 12px;
+  --font-label-sm-weight: 500;
+  --font-label-sm-line-height: 16px;
+
+  /* Micro */
+  --font-micro-size: 11px;
+  --font-micro-weight: 500;
+  --font-micro-line-height: 14px;
+  --font-micro-letter-spacing: 0.02em;
+}

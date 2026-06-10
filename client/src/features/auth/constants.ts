@@ -1,0 +1,5 @@
+export const AUTH_HERO_IMAGE =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuCXptJir-JmUddeYOtB5NOMQH7U9Dq6AgUJoOyptnjOAmbQOyGsOw3LnPdkuQCyklay5kMOmXagmAsItjGmbiQ8vAY9AwVErpGZEF5h212f0GmqRhMnqB5L38w0WW54NWF67KOajLmu4A_vYnIM_GUSSnsJ4i0OZoH439ojcfi8hCyqp9RNYymrDtmIPKujquq8VmyKBLrQsHxSxU48EtScWFdwXzrmZdAVq6dYOdvWlb2KTrlR_WKS_1qC3Tj2WKb3IttaM-q4fqzq";
+
+export const AUTH_HERO_ALT =
+  "A minimalist lifestyle photograph with premium products in a clean workspace";

@@ -1,0 +1,19 @@
+.label {
+  font-family: var(--font-family);
+  font-size: var(--font-label-md-size);
+  font-weight: var(--font-label-md-weight);
+  line-height: var(--font-label-md-line-height);
+}
+
+.default {
+  color: var(--color-on-surface);
+}
+
+.muted {
+  color: var(--color-on-surface-variant);
+}
+
+.required::after {
+  content: " *";
+  color: var(--color-danger);
+}

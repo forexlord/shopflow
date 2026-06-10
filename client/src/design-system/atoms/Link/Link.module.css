@@ -1,0 +1,40 @@
+.link {
+  font-family: var(--font-family);
+  font-size: var(--font-label-md-size);
+  font-weight: var(--font-label-md-weight);
+  line-height: var(--font-label-md-line-height);
+  transition: color var(--transition-fast);
+}
+
+.default {
+  color: var(--color-primary-container);
+}
+
+.default:hover {
+  color: var(--color-primary);
+}
+
+.nav {
+  color: var(--color-on-surface-variant);
+}
+
+.nav:hover {
+  color: var(--color-on-surface);
+}
+
+.nav-active {
+  color: var(--color-primary-container);
+  font-weight: var(--font-label-md-weight);
+}
+
+.inline {
+  font-size: var(--font-label-sm-size);
+  font-weight: var(--font-label-sm-weight);
+  line-height: var(--font-label-sm-line-height);
+  color: var(--color-primary-container);
+}
+
+.inline:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}

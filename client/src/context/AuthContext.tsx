@@ -6,12 +6,10 @@ import {
   useState,
 } from "react";
 import type { ReactNode } from "react";
+import { loginRequest } from "../api/auth.api";
+import type { AuthSession, User } from "../types/auth.types";
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-}
+const STORAGE_KEY = "shopflow_auth";
 
 interface AuthContextValue {
   user: User | null;
@@ -23,31 +21,67 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function readStoredSession(): AuthSession | null {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw) as AuthSession;
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+    return null;
+  }
+}
+
+function persistSession(session: AuthSession | null): void {
+  if (session) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+  } else {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+}
+
+interface AuthState {
+  user: User | null;
+  token: string | null;
+}
+
+function getInitialAuthState(): AuthState {
+  const session = readStoredSession();
+  return {
+    user: session?.user ?? null,
+    token: session?.token ?? null,
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [authState, setAuthState] = useState<AuthState>(getInitialAuthState);
 
   const login = useCallback(async (email: string, password: string) => {
-    // TODO: connect to POST /api/auth/login
-    void email;
-    void password;
-    throw new Error("Not implemented");
+    const response = await loginRequest({ email, password });
+    const session: AuthSession = {
+      token: response.token,
+      user: response.user,
+    };
+
+    setAuthState({ user: session.user, token: session.token });
+    persistSession(session);
   }, []);
 
   const logout = useCallback(() => {
-    setUser(null);
-    setToken(null);
+    setAuthState({ user: null, token: null });
+    persistSession(null);
   }, []);
 
   const value = useMemo(
     () => ({
-      user,
-      token,
-      isAuthenticated: Boolean(token),
+      user: authState.user,
+      token: authState.token,
+      isAuthenticated: Boolean(authState.token),
       login,
       logout,
     }),
-    [user, token, login, logout]
+    [authState, login, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

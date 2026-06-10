@@ -1,0 +1,24 @@
+.button {
+  font-family: var(--font-family);
+  font-size: var(--font-label-sm-size);
+  font-weight: var(--font-label-sm-weight);
+  line-height: var(--font-label-sm-line-height);
+  color: var(--color-primary-container);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    text-decoration var(--transition-fast);
+}
+
+.button:hover:not(:disabled) {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

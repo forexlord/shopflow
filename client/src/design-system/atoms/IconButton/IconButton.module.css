@@ -1,0 +1,19 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-default);
+  color: var(--color-secondary);
+  transition: color var(--transition-fast);
+}
+
+.button:hover:not(:disabled) {
+  color: var(--color-on-surface);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

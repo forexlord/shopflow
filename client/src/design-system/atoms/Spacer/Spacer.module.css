@@ -1,0 +1,53 @@
+.spacer {
+  flex-shrink: 0;
+}
+
+.xs {
+  height: var(--space-xs);
+  width: var(--space-xs);
+}
+
+.sm {
+  height: var(--space-sm);
+  width: var(--space-sm);
+}
+
+.md {
+  height: var(--space-md);
+  width: var(--space-md);
+}
+
+.lg {
+  height: var(--space-lg);
+  width: var(--space-lg);
+}
+
+.xl {
+  height: var(--space-xl);
+  width: var(--space-xl);
+}
+
+.horizontal.xs {
+  width: var(--space-xs);
+  height: auto;
+}
+
+.horizontal.sm {
+  width: var(--space-sm);
+  height: auto;
+}
+
+.horizontal.md {
+  width: var(--space-md);
+  height: auto;
+}
+
+.horizontal.lg {
+  width: var(--space-lg);
+  height: auto;
+}
+
+.horizontal.xl {
+  width: var(--space-xl);
+  height: auto;
+}

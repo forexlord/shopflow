@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
     "build": "tsc",
     "start": "node dist/main.js",
-    "seed": "ts-node src/seed.ts"
+    "seed": "npm run build && node dist/seed.js"
   },
   "keywords": [],
   "author": "",

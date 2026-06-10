@@ -1,0 +1,33 @@
+.brand {
+  margin-bottom: var(--space-xl);
+}
+
+.header {
+  margin-bottom: var(--space-xl);
+}
+
+.title {
+  margin-bottom: var(--space-xs);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.passwordLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.passwordField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.error {
+  margin: 0;
+}

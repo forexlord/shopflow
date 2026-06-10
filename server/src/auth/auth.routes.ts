@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { HttpError } from "../common/errors/http-error";
 import { authService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
 
@@ -10,8 +11,13 @@ router.post("/login", async (req, res) => {
     const result = await authService.login(dto);
     res.json(result);
   } catch (err) {
+    if (err instanceof HttpError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
     const message = err instanceof Error ? err.message : "Login failed";
-    res.status(501).json({ message });
+    res.status(500).json({ message });
   }
 });
 

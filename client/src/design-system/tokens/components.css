@@ -1,0 +1,24 @@
+:root {
+  /* Button */
+  --button-height-sm: 36px;
+  --button-height-md: 44px;
+  --button-height-lg: 52px;
+  --button-padding-x-sm: 12px;
+  --button-padding-x-md: 16px;
+  --button-padding-x-lg: 24px;
+
+  /* Input */
+  --input-height: 44px;
+  --input-padding-x: 12px;
+
+  /* Card */
+  --card-padding: 16px;
+  --card-radius: 12px;
+
+  /* Navigation */
+  --nav-height: 64px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-default: 200ms ease;
+}

@@ -1,0 +1,12 @@
+.divider {
+  border: none;
+  margin: 0;
+  height: var(--border-width-default);
+  background-color: var(--color-border);
+}
+
+.vertical {
+  width: var(--border-width-default);
+  height: auto;
+  align-self: stretch;
+}

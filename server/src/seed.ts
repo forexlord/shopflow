@@ -1,18 +1,17 @@
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import { Product } from "./products/models/product.model";
-import { User } from "./users/models/user.model";
+import { seedUsers } from "./seed/seed-users";
 
 dotenv.config();
 
 async function seed() {
   await connectDB();
 
-  // TODO: add seed data when implementing the backend
   await Product.deleteMany({});
-  await User.deleteMany({});
+  await seedUsers();
 
-  console.log("Seed complete (no data inserted yet)");
+  console.log("Seed complete");
   process.exit(0);
 }
 
