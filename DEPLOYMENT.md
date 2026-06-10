@@ -78,10 +78,10 @@ npm run seed
 
 | Name | Email | Password | Notes |
 | ---- | ----- | -------- | ----- |
-| Demo Shopper | `shopper@shopflow.com` | `password123` | Normal shopping / checkout |
-| Admin User | `admin@shopflow.com` | `password123` | Same UI; can use product write APIs |
+| Demo Shopper | `shopper@shopflow.com` | `password123` | Browse, cart, and checkout only |
+| Admin User | `admin@shopflow.com` | `password123` | Full access + create, edit, and delete products |
 
-Each user has their **own cart**, synced **across browsers** when logged in as the same account.
+Only the **admin** account can create, edit, or delete products. Each user has their **own cart**, synced **across browsers** when logged in as the same account.
 
 7. Build and start with PM2:
 
@@ -273,8 +273,8 @@ After seeding, two demo users are available:
 
 | Name | Email | Password | Notes |
 | ---- | ----- | -------- | ----- |
-| Demo Shopper | `shopper@shopflow.com` | `password123` | Use for normal shopping and checkout testing |
-| Admin User | `admin@shopflow.com` | `password123` | Same storefront experience; can also call JWT-protected product write APIs |
+| Demo Shopper | `shopper@shopflow.com` | `password123` | Browse, cart, and checkout only |
+| Admin User | `admin@shopflow.com` | `password123` | Full access + create, edit, and delete products |
 
 To add or reset users in production, SSH into EC2 and re-run:
 
@@ -284,6 +284,16 @@ npm run seed
 ```
 
 > **Warning:** `npm run seed` clears and re-inserts **all** users and products. Only run this when you intend to reset demo data.
+
+### Admin product management
+
+Log in as **`admin@shopflow.com`** to:
+
+- **Create** — “Create product” on the catalog page (`/products/new`)
+- **Edit** — “Edit product” on any product detail page (`/products/:id/edit`)
+- **Delete** — “Delete product” at the bottom of the detail page (in-app confirmation modal)
+
+**`shopper@shopflow.com`** can shop and use checkout but does not see create, edit, or delete controls.
 
 ---
 

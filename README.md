@@ -13,6 +13,7 @@ ShopFlow is a full-stack e-commerce application built as an npm workspaces monor
 - **Checkout** — Order summary with test purchase flow (spinner → success → cart cleared + toast)
 - **Design system** — Shared tokens, atoms, and molecules used across all pages
 - **Toast notifications** — Success and error feedback (API errors surface automatically)
+- **Admin product management** — Create, edit, and delete products (admin account only)
 - **Seed data** — 18 sample products and 2 demo users
 
 ## Tech Stack
@@ -188,8 +189,8 @@ This clears and re-inserts seed data:
 
 | Name | Email | Password | Notes |
 | ---- | ----- | -------- | ----- |
-| Demo Shopper | `shopper@shopflow.com` | `password123` | Normal shopping / checkout |
-| Admin User | `admin@shopflow.com` | `password123` | Same UI; can use product write APIs |
+| Demo Shopper | `shopper@shopflow.com` | `password123` | Browse, cart, and checkout only |
+| Admin User | `admin@shopflow.com` | `password123` | Full access + create, edit, and delete products |
 
 Each user has their **own cart**, stored on the server and **synced across browsers** when logged in as the same account.
 
@@ -229,6 +230,18 @@ After login, browse products, add items to your cart, and visit `/checkout` to r
 | `/products/new`       | Admin     | Create product form                  |
 | `/products/:id/edit`  | Admin     | Edit product form                    |
 | `/checkout`           | Protected | Cart and order summary               |
+
+### Admin product management
+
+Only **`admin@shopflow.com`** can manage the product catalog in the UI:
+
+| Action | Where |
+| ------ | ----- |
+| **Create** | “Create product” on the products page → `/products/new` |
+| **Edit** | “Edit product” on a product detail page → `/products/:id/edit` |
+| **Delete** | “Delete product” on a product detail page (confirmation modal) |
+
+`shopper@shopflow.com` has the same storefront experience but **cannot** see these controls or access create/edit routes. On the API, `POST`, `PATCH`, and `DELETE` on `/api/products` require a valid JWT (any logged-in user at the API layer; the UI restricts management to the admin account).
 
 ## Scripts
 
