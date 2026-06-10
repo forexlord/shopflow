@@ -11,6 +11,7 @@ export async function seedUsers(): Promise<void> {
     usersSeed.map(async (entry) => ({
       email: entry.email.toLowerCase(),
       name: entry.name,
+      role: entry.role,
       password: await bcrypt.hash(entry.password, SALT_ROUNDS),
     }))
   );

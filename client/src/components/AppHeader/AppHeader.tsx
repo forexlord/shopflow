@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import {
   Avatar,
+  Badge,
   BrandLogo,
   Icon,
   IconButton,
@@ -11,6 +12,7 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import { useProductFiltersContext } from "../../features/products/context/ProductFiltersContext";
+import { isAdmin } from "../../features/products/utils/isAdmin";
 import { HeaderCartButton } from "./HeaderCartButton";
 import { HeaderNavLink } from "./HeaderNavLink";
 import styles from "./AppHeader.module.css";
@@ -75,6 +77,11 @@ export function AppHeader() {
 
         {user ? (
           <div className={styles.userCluster}>
+            {isAdmin(user) ? (
+              <Badge variant="success" className={styles.adminBadge}>
+                Admin
+              </Badge>
+            ) : null}
             <Avatar initials={getInitials(user.name)} />
             <IconButton
               label="Logout"

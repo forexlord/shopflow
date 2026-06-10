@@ -32,7 +32,7 @@ ShopFlow is a full-stack e-commerce application built as an npm workspaces monor
 ```mermaid
 flowchart TB
   subgraph client ["Client (port 3000)"]
-    Pages["Pages: Products, Detail, Checkout, Login"]
+    Pages["Pages: Products, Detail, Admin forms, Checkout, Login"]
     DS["Design System"]
     AuthCtx["AuthContext"]
     CartCtx["CartContext (synced via /api/cart)"]
@@ -47,15 +47,19 @@ flowchart TB
     App["Express app"]
     AuthRoutes["/api/auth"]
     ProductRoutes["/api/products"]
+    CartRoutes["/api/cart"]
     JWTMw["jwtMiddleware"]
     App --> AuthRoutes
     App --> ProductRoutes
+    App --> CartRoutes
     ProductRoutes --> JWTMw
+    CartRoutes --> JWTMw
   end
 
   subgraph db ["MongoDB"]
     Users["users"]
     Products["products"]
+    Carts["carts"]
   end
 
   client -->|"HTTP (VITE_API_URL)"| server
@@ -66,7 +70,7 @@ flowchart TB
 
 1. **Public reads** — `GET /api/products`, `GET /api/products/:id`, and `GET /api/products/categories` require no authentication.
 2. **Authentication** — `POST /api/auth/login` validates credentials with bcrypt and returns a JWT. The client stores the session in `localStorage` and sends `Authorization: Bearer <token>` on protected requests.
-3. **Protected writes** — `POST`, `PATCH`, and `DELETE` on `/api/products` pass through `jwtMiddleware`, which verifies the token and attaches `userId` to the request.
+3. **Protected writes** — `POST`, `PATCH`, and `DELETE` on `/api/products` require a valid JWT **and** the `admin` role (`jwtMiddleware` → `adminMiddleware`). Shoppers receive `403 Forbidden` if they call these endpoints directly.
 4. **Cart** — Each user's cart is stored in MongoDB and accessed via JWT-protected `/api/cart` endpoints. The client syncs changes on login and debounces updates after each cart mutation, so the same cart appears on any browser or device.
 5. **Errors** — Failed API responses trigger an error toast in the top-right corner via the shared `apiClient`.
 
@@ -82,14 +86,14 @@ routes → service → model (Mongoose)
 - **Products** — `products.routes.ts` → `products.service.ts` → `Product` model
 - **Cart** — `cart.routes.ts` → `cart.service.ts` → `Cart` model
 
-Shared infrastructure lives in `config/db.ts` (MongoDB connection) and `auth/jwt.middleware.ts`.
+Shared infrastructure lives in `config/db.ts` (MongoDB connection), `auth/jwt.middleware.ts`, and `auth/admin.middleware.ts`.
 
 ### Frontend layout
 
-- **Routing** — `AppRouter` defines `/` (products), `/products/:productId`, `/checkout`, and `/login`. Authenticated pages share a `Layout` shell (`AppHeader`, `AppFooter`).
+- **Routing** — `AppRouter` defines `/` (products), `/products/:productId`, `/products/new`, `/products/:id/edit` (admin), `/checkout`, and `/login`. Authenticated pages share a `Layout` shell (`AppHeader`, `AppFooter`). `AdminRoute` guards create/edit routes.
 - **State** — `AppProvider` wraps `AuthProvider`, `CartProvider`, `ToastProvider`, and `ProductFiltersProvider`.
-- **Features** — Domain logic lives under `features/` (`auth`, `products`, `cart`).
-- **Design system** — Reusable UI in `design-system/` (tokens, atoms, molecules).
+- **Features** — Domain logic lives under `features/` (`auth`, `products`, `cart`). Products include `ProductForm`, filters, grid/list views, and admin-only toolbar actions.
+- **Design system** — Reusable UI in `design-system/` (tokens, 19 atoms, molecules including `ConfirmDialog` for delete confirmation).
 - **API** — `api/client.ts` centralizes fetch, error handling, and toast notifications.
 
 ## Project Structure
@@ -110,9 +114,9 @@ shopflow/
 │   │   ├── features/
 │   │   │   ├── auth/         # Login form
 │   │   │   ├── cart/         # Checkout view, cart items, storage
-│   │   │   └── products/     # Filters, grid, detail, hooks
-│   │   ├── pages/            # Products, Detail, Checkout, Login
-│   │   └── routes/           # Router, ProtectedRoute, GuestRoute
+│   │   │   └── products/     # Filters, grid, detail, ProductForm, isAdmin
+│   │   ├── pages/            # Products, Detail, Create/Edit, Checkout, Login
+│   │   └── routes/           # Router, ProtectedRoute, GuestRoute, AdminRoute
 │   ├── vite.config.ts
 │   └── .env.local            # VITE_API_URL
 └── server/
@@ -183,14 +187,16 @@ npm run seed
 This clears and re-inserts seed data:
 
 - **18 products** — across categories like Electronics, Footwear, Apparel, and Home
-- **2 demo users** — see credentials below (there is no sign-up API)
+- **2 demo users** with roles (`admin` / `shopper`) — see credentials below (there is no sign-up API)
+
+> After re-seeding or upgrading to role-based auth, log out and log back in so the client receives a fresh JWT with `role`.
 
 **Demo login credentials** (use these after seeding):
 
-| Name | Email | Password | Notes |
-| ---- | ----- | -------- | ----- |
-| Demo Shopper | `shopper@shopflow.com` | `password123` | Browse, cart, and checkout only |
-| Admin User | `admin@shopflow.com` | `password123` | Full access + create, edit, and delete products |
+| Name | Email | Password | Role | Notes |
+| ---- | ----- | -------- | ---- | ----- |
+| Demo Shopper | `shopper@shopflow.com` | `password123` | `shopper` | Browse, cart, and checkout only |
+| Admin User | `admin@shopflow.com` | `password123` | `admin` | Full access + create, edit, and delete products |
 
 Each user has their **own cart**, stored on the server and **synced across browsers** when logged in as the same account.
 
@@ -220,6 +226,21 @@ Open http://localhost:3000 — unauthenticated users are redirected to `/login`.
 
 After login, browse products, add items to your cart, and visit `/checkout` to review the order summary. For production testing, see [DEPLOYMENT.md](./DEPLOYMENT.md#demo-accounts-no-sign-up-api).
 
+### Testing admin product CRUD
+
+> **Important:** Admin controls require the **`admin`** role (seed user `admin@shopflow.com`). The `shopper` account does not show create, edit, or delete buttons, and the API returns `403` for product writes.
+
+1. Log in as `admin@shopflow.com` / `password123` — the header shows an **Admin** badge next to your avatar.
+2. On the products page (`/`), click **Create product** in the toolbar (primary button, left of Filters).
+3. Fill in the form (name, category, price, stock, description, optional image URL) and click **Save product** — you are redirected to the new product detail page.
+4. On any product detail page, click **Edit product** next to Add to Cart — update fields and click **Update product**.
+5. Scroll to the bottom of the detail page and click **Delete product** — confirm in the modal. The product is removed and you return to the catalog.
+
+Direct URLs (admin only; non-admin users are redirected to `/`):
+
+- Create: http://localhost:3000/products/new
+- Edit: http://localhost:3000/products/:productId/edit
+
 ## Client Routes
 
 | Path                  | Access    | Description                          |
@@ -233,7 +254,7 @@ After login, browse products, add items to your cart, and visit `/checkout` to r
 
 ### Admin product management
 
-Only **`admin@shopflow.com`** can manage the product catalog in the UI:
+Only users with the **`admin`** role can manage the product catalog (seed: `admin@shopflow.com`):
 
 | Action | Where |
 | ------ | ----- |
@@ -241,7 +262,27 @@ Only **`admin@shopflow.com`** can manage the product catalog in the UI:
 | **Edit** | “Edit product” on a product detail page → `/products/:id/edit` |
 | **Delete** | “Delete product” on a product detail page (confirmation modal) |
 
-`shopper@shopflow.com` has the same storefront experience but **cannot** see these controls or access create/edit routes. On the API, `POST`, `PATCH`, and `DELETE` on `/api/products` require a valid JWT (any logged-in user at the API layer; the UI restricts management to the admin account).
+**Enforcement:**
+
+| Layer | Behavior |
+| ----- | -------- |
+| **UI** | `AdminRoute` and `isAdmin(user)` hide admin controls unless `user.role === "admin"` |
+| **API** | `adminMiddleware` on `POST` / `PATCH` / `DELETE` `/api/products` returns `403` for non-admin JWTs |
+
+`shopper@shopflow.com` (`role: shopper`) has the same storefront experience but cannot create, edit, or delete products in the UI or via the API.
+
+### Product form fields (create & edit)
+
+| Field         | Control        | Required | Notes                                      |
+| ------------- | -------------- | -------- | ------------------------------------------ |
+| Product name  | Text input     | yes      |                                            |
+| Category      | Select dropdown| no       | Loaded from API; defaults to seed categories |
+| Price         | Number ($)     | yes      | Min 0                                      |
+| Stock quantity| Number         | yes      | Integer, min 0                             |
+| Description   | Textarea       | yes      |                                            |
+| Image URL     | URL input      | no       | Direct link only (no file upload)          |
+
+Successful create/update shows a success toast and navigates to the product detail page. Delete uses `ConfirmDialog` (not `window.confirm`).
 
 ## Scripts
 
@@ -266,9 +307,9 @@ Workspace-specific scripts are also available, e.g. `npm run dev --workspace=cli
 | `GET`    | `/api/products`             | —    | List products (filtered) |
 | `GET`    | `/api/products/categories`  | —    | Distinct categories      |
 | `GET`    | `/api/products/:id`         | —    | Single product           |
-| `POST`   | `/api/products`             | JWT  | Create product           |
-| `PATCH`  | `/api/products/:id`         | JWT  | Update product           |
-| `DELETE` | `/api/products/:id`         | JWT  | Delete product           |
+| `POST`   | `/api/products`             | JWT + admin | Create product           |
+| `PATCH`  | `/api/products/:id`         | JWT + admin | Update product           |
+| `DELETE` | `/api/products/:id`         | JWT + admin | Delete product           |
 | `GET`    | `/api/cart`                 | JWT  | Get current user's cart  |
 | `PUT`    | `/api/cart`                 | JWT  | Replace cart items       |
 | `DELETE` | `/api/cart`                 | JWT  | Clear cart               |
@@ -305,6 +346,9 @@ Workspace-specific scripts are also available, e.g. `npm run dev --workspace=cli
 | `email`    | string | yes (unique) |
 | `password` | string | yes (hashed) |
 | `name`     | string | yes          |
+| `role`     | string | yes (`admin` or `shopper`, default `shopper`) |
+
+The JWT payload includes `userId` and `role`. Login response `user` object also includes `role` for client-side guards.
 
 ## Production & deployment
 
@@ -339,14 +383,19 @@ VITE_API_URL=http://your-ec2-public-ip:5000 npm run build:client
 | Area                         | Status                                      |
 | ---------------------------- | ------------------------------------------- |
 | Monorepo + dev tooling       | Done                                        |
-| Design system                | Done                                        |
-| MongoDB models + connection  | Done                                        |
-| Auth (login, JWT, bcrypt)    | Done                                        |
-| Product read/write API       | Done                                        |
+| Design system (19 atoms)     | Done                                        |
+| MongoDB models + connection  | Done (users, products, carts)               |
+| Auth (login, JWT, bcrypt)    | Done (no sign-up API)                       |
+| Product read/write API       | Done (CRUD + filters + categories)          |
+| Cart API (per-user, JWT)     | Done (GET/PUT/DELETE `/api/cart`)           |
 | Database seed data           | Done (18 products, 2 users)                 |
-| Product catalog UI           | Done                                        |
-| Product detail UI            | Done                                        |
+| Product catalog UI           | Done (search, filters, sort, grid/list, pagination) |
+| Product detail UI            | Done (gallery, quantity, add-to-cart)       |
 | Per-user cart + checkout UI  | Done (server-synced cart, test purchase flow) |
-| Toast notifications        | Done                                        |
-| Admin product management UI  | Done (create, edit, delete for admin user)  |
-| Real payment / orders API    | Not started                                 |
+| Toast notifications          | Done (API errors + success feedback)        |
+| Admin product management UI  | **Done** — Create button on catalog; Edit/Delete on detail; shared `ProductForm`; `AdminRoute` + header Admin badge |
+| CORS for S3 → EC2 deploy     | Done (`server/src/app.ts`, optional `CORS_ORIGIN`) |
+| CI/CD (GitHub Actions)       | Done (frontend S3, backend EC2/PM2)         |
+| Real payment / orders API    | Not started (checkout is simulated)         |
+| Server-side admin role check | Done (`adminMiddleware` on product writes) |
+| Automated tests / lint CI    | Not started                                 |

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { HttpError } from "../common/errors/http-error";
+import { adminMiddleware } from "../auth/admin.middleware";
 import { jwtMiddleware } from "../auth/jwt.middleware";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
@@ -47,7 +48,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", jwtMiddleware, async (req, res) => {
+router.post("/", jwtMiddleware, adminMiddleware, async (req, res) => {
   try {
     const dto: CreateProductDto = req.body;
     const product = await productsService.create(dto);
@@ -63,7 +64,7 @@ router.post("/", jwtMiddleware, async (req, res) => {
   }
 });
 
-router.patch("/:id", jwtMiddleware, async (req, res) => {
+router.patch("/:id", jwtMiddleware, adminMiddleware, async (req, res) => {
   try {
     const dto: UpdateProductDto = req.body;
     const product = await productsService.update(String(req.params.id), dto);
@@ -83,7 +84,7 @@ router.patch("/:id", jwtMiddleware, async (req, res) => {
   }
 });
 
-router.delete("/:id", jwtMiddleware, async (req, res) => {
+router.delete("/:id", jwtMiddleware, adminMiddleware, async (req, res) => {
   try {
     const product = await productsService.remove(String(req.params.id));
     if (!product) {

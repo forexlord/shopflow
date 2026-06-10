@@ -26,7 +26,12 @@ function readStoredSession(): AuthSession | null {
   if (!raw) return null;
 
   try {
-    return JSON.parse(raw) as AuthSession;
+    const session = JSON.parse(raw) as AuthSession;
+    if (!session.user?.role) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return session;
   } catch {
     localStorage.removeItem(STORAGE_KEY);
     return null;

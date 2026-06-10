@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import type { UserRole } from "../users/user-role";
 
 export interface AuthRequest extends Request {
   userId?: string;
+  userRole?: UserRole;
 }
 
 export function jwtMiddleware(
@@ -26,8 +28,12 @@ export function jwtMiddleware(
   }
 
   try {
-    const payload = jwt.verify(token, secret) as { userId: string };
+    const payload = jwt.verify(token, secret) as {
+      userId: string;
+      role: UserRole;
+    };
     req.userId = payload.userId;
+    req.userRole = payload.role;
     next();
   } catch {
     res.status(401).json({ message: "Invalid or expired token" });

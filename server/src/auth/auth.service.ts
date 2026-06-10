@@ -24,7 +24,7 @@ export class AuthService {
       throw new HttpError(401, "Invalid email or password");
     }
 
-    const token = signAccessToken(user.id);
+    const token = signAccessToken(user.id, user.role);
 
     return {
       token,
@@ -32,6 +32,7 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
+        role: user.role,
       },
     };
   }
