@@ -48,5 +48,8 @@ export type { LinkProps } from "./Link/Link";
 export { Spacer } from "./Spacer/Spacer";
 export type { SpacerProps } from "./Spacer/Spacer";
 
+export { Spinner } from "./Spinner/Spinner";
+export type { SpinnerProps } from "./Spinner/Spinner";
+
 export { Text } from "./Text/Text";
 export type { TextProps } from "./Text/Text";

@@ -1,0 +1,37 @@
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: var(--border-width-default) solid var(--color-outline-variant);
+  border-radius: var(--radius-default);
+  color: var(--color-on-surface);
+  background-color: transparent;
+  transition: background-color var(--transition-fast);
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--color-surface-container-low);
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.value {
+  min-width: 16px;
+  text-align: center;
+  font-family: var(--font-family);
+  font-size: var(--font-label-sm-size);
+  font-weight: 500;
+  line-height: var(--font-label-sm-line-height);
+  color: var(--color-on-surface);
+}

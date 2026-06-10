@@ -31,6 +31,7 @@ export function AppHeader() {
   const location = useLocation();
   const isProductsActive =
     location.pathname === "/" || location.pathname.startsWith("/products/");
+  const isCheckoutActive = location.pathname === "/checkout";
 
   return (
     <header className={styles.header}>
@@ -42,7 +43,9 @@ export function AppHeader() {
         <HeaderNavLink to="/" active={isProductsActive}>
           Products
         </HeaderNavLink>
-        <HeaderNavLink to="/">Checkout</HeaderNavLink>
+        <HeaderNavLink to="/checkout" active={isCheckoutActive}>
+          Checkout
+        </HeaderNavLink>
       </nav>
 
       <div className={styles.center}>

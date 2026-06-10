@@ -1,0 +1,68 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-block: 96px;
+  gap: var(--space-lg);
+}
+
+.iconWrap {
+  position: relative;
+  width: 192px;
+  height: 192px;
+  margin-bottom: var(--space-md);
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--color-secondary-container);
+  opacity: 0.2;
+  filter: blur(32px);
+}
+
+.icon {
+  position: relative;
+  z-index: 1;
+  font-size: 120px;
+  color: var(--color-outline);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-width: 320px;
+}
+
+.shopButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--button-height-lg);
+  padding-inline: var(--button-padding-x-lg);
+  margin-top: var(--space-md);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-label-md-size);
+  font-weight: 700;
+  line-height: var(--font-label-md-line-height);
+  text-decoration: none;
+  box-shadow: var(--shadow-overlay);
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.shopButton:hover {
+  opacity: 0.9;
+}
+
+.shopButton:active {
+  transform: scale(0.98);
+}

@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
+import CheckoutPage from "../pages/CheckoutPage";
 import LoginPage from "../pages/LoginPage";
 import ProductDetailPage from "../pages/ProductDetailPage";
 import ProductsPage from "../pages/ProductsPage";
@@ -17,6 +18,7 @@ export default function AppRouter() {
         <Route element={<Layout />}>
           <Route index element={<ProductsPage />} />
           <Route path="products/:productId" element={<ProductDetailPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
         </Route>
       </Route>
     </Routes>

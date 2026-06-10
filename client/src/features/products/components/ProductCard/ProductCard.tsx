@@ -26,6 +26,8 @@ export function ProductCard({ product, view }: ProductCardProps) {
       productId: product.id,
       name: product.name,
       price: product.price,
+      imageUrl: product.imageUrl,
+      category: product.category,
     });
   }
 

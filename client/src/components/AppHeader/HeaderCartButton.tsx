@@ -1,4 +1,5 @@
-import { Icon, IconButton } from "../../design-system";
+import { Link } from "react-router-dom";
+import { Icon } from "../../design-system";
 import styles from "./HeaderCartButton.module.css";
 
 export interface HeaderCartButtonProps {
@@ -8,12 +9,13 @@ export interface HeaderCartButtonProps {
 export function HeaderCartButton({ itemCount }: HeaderCartButtonProps) {
   return (
     <div className={styles.wrapper}>
-      <IconButton
+      <Link
+        to="/checkout"
         className={styles.button}
-        label={`Cart with ${itemCount} items`}
+        aria-label={`Cart with ${itemCount} items`}
       >
         <Icon name="shopping_cart" size="sm" />
-      </IconButton>
+      </Link>
       {itemCount > 0 ? (
         <span className={styles.badge} aria-hidden="true">
           {itemCount > 99 ? "99+" : itemCount}
