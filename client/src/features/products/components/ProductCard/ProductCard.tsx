@@ -1,3 +1,5 @@
+import type { MouseEvent } from "react";
+import { Link } from "react-router-dom";
 import { Badge, Button, Card, Icon, Text } from "../../../../design-system";
 import { useCart } from "../../../../context/CartContext";
 import type { Product, ProductViewMode } from "../../../../types/product.types";
@@ -13,8 +15,11 @@ export interface ProductCardProps {
 export function ProductCard({ product, view }: ProductCardProps) {
   const { addItem } = useCart();
   const inStock = product.stock > 0;
+  const detailPath = `/products/${product.id}`;
 
-  function handleAddToCart() {
+  function handleAddToCart(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
     if (!inStock) return;
 
     addItem({
@@ -35,32 +40,36 @@ export function ProductCard({ product, view }: ProductCardProps) {
         view === "list" && styles.list
       )}
     >
-      <div className={styles.imageWrap}>
-        {product.imageUrl ? (
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className={styles.image}
-            loading="lazy"
-          />
-        ) : null}
-        {product.category ? (
-          <Badge variant="category" size="micro" className={styles.badge}>
-            {product.category}
-          </Badge>
-        ) : null}
-        {!inStock ? (
-          <div className={styles.overlay}>
-            <span className={styles.outOfStockLabel}>Out of Stock</span>
-          </div>
-        ) : null}
-      </div>
+      <Link to={detailPath} className={styles.mediaLink}>
+        <div className={styles.imageWrap}>
+          {product.imageUrl ? (
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className={styles.image}
+              loading="lazy"
+            />
+          ) : null}
+          {product.category ? (
+            <Badge variant="category" className={styles.categoryTag}>
+              {product.category}
+            </Badge>
+          ) : null}
+          {!inStock ? (
+            <div className={styles.overlay}>
+              <span className={styles.outOfStockLabel}>Out of Stock</span>
+            </div>
+          ) : null}
+        </div>
+      </Link>
 
       <div className={cx(styles.body, view === "list" && styles.listBody)}>
         <div className={view === "list" ? styles.listContent : undefined}>
-          <Text variant="headline-sm" as="h3" className={styles.title}>
-            {product.name}
-          </Text>
+          <Link to={detailPath} className={styles.titleLink}>
+            <Text variant="headline-sm" as="h3" className={styles.title}>
+              {product.name}
+            </Text>
+          </Link>
           {view === "list" ? (
             <Text variant="body-md" color="secondary" className={styles.description}>
               {product.description}

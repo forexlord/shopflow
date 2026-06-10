@@ -1,0 +1,39 @@
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border: var(--border-width-default) solid var(--color-outline-variant);
+  border-radius: var(--radius-default);
+  overflow: hidden;
+  background-color: var(--color-bg-primary);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-on-surface);
+  transition: background-color var(--transition-fast);
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--color-surface-container-low);
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.value {
+  min-width: 40px;
+  padding: var(--space-sm) var(--space-md);
+  text-align: center;
+  font-family: var(--font-family);
+  font-size: var(--font-label-md-size);
+  font-weight: 700;
+  line-height: var(--font-label-md-line-height);
+  color: var(--color-on-surface);
+  border-inline: var(--border-width-default) solid var(--color-outline-variant);
+}

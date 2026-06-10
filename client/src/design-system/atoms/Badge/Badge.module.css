@@ -9,6 +9,7 @@
   border-radius: var(--radius-full);
   padding: var(--space-xs) var(--space-sm);
   white-space: nowrap;
+  width: fit-content;
 }
 
 .micro {
@@ -19,8 +20,14 @@
 }
 
 .category {
-  background-color: var(--color-primary-container);
-  color: var(--color-on-primary-container);
+  display: inline-block;
+  padding: var(--space-xs) var(--space-md);
+  background-color: var(--color-pill-bg);
+  color: var(--color-pill-text);
+  font-size: var(--font-micro-size);
+  font-weight: var(--font-micro-weight);
+  line-height: var(--font-micro-line-height);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 

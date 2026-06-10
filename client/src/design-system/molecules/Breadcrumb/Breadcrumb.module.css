@@ -1,0 +1,22 @@
+.nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.separator {
+  color: var(--color-secondary);
+}
+
+.link {
+  transition: color var(--transition-fast);
+}
+
+.link:hover {
+  color: var(--color-primary-container);
+}
+
+.current {
+  font-weight: 500;
+}

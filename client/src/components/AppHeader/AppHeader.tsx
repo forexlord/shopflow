@@ -29,7 +29,8 @@ export function AppHeader() {
   const { itemCount } = useCart();
   const { filters, setSearch } = useProductFiltersContext();
   const location = useLocation();
-  const isProductsActive = location.pathname === "/";
+  const isProductsActive =
+    location.pathname === "/" || location.pathname.startsWith("/products/");
 
   return (
     <header className={styles.header}>

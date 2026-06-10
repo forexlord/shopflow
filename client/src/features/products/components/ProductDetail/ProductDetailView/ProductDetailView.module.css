@@ -1,0 +1,38 @@
+.view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.breadcrumb {
+  margin-bottom: var(--space-lg);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.galleryColumn {
+  width: 100%;
+}
+
+.detailsColumn {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .content {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .galleryColumn {
+    width: 55%;
+  }
+
+  .detailsColumn {
+    width: 45%;
+  }
+}

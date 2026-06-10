@@ -1,0 +1,64 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.categoryTag {
+  margin-bottom: var(--space-sm);
+}
+
+.title {
+  margin-bottom: var(--space-xs);
+}
+
+.price {
+  margin-bottom: var(--space-lg);
+}
+
+.priceValue {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.about {
+  margin-bottom: var(--space-xl);
+}
+
+.aboutTitle {
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.description {
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: var(--border-width-default) solid var(--color-outline-variant);
+}
+
+.actionsRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.quantityGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+@media (min-width: 640px) {
+  .actionsRow {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

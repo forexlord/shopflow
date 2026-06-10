@@ -43,6 +43,10 @@ export function fetchProducts(
   return apiClient<ProductListResponse>(`/api/products?${query}`, { token });
 }
 
+export function fetchProductById(id: string): Promise<Product> {
+  return apiClient<Product>(`/api/products/${id}`);
+}
+
 export function createProduct(
   payload: CreateProductPayload,
   token: string
