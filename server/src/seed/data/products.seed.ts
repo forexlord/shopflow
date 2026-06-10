@@ -39,9 +39,9 @@ const images = {
   actionCamera:
     "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&auto=format&fit=crop&q=80",
   chinos:
-    "https://images.unsplash.com/photo-1473966968600-fa801b279a00?w=800&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80",
   candle:
-    "https://images.unsplash.com/photo-1603006905003-e1a4a0a0f0fe?w=800&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&auto=format&fit=crop&q=80",
   techOrganizer:
     "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80",
   speaker:

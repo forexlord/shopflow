@@ -2,6 +2,8 @@
 
 ShopFlow is a full-stack e-commerce application built as an npm workspaces monorepo. The React frontend provides product browsing, authentication, a per-user shopping cart, and a checkout flow; the Express API manages products, users, and JWT-protected admin operations backed by MongoDB.
 
+**Production deployment** (S3 + EC2 + GitHub Actions) is documented in [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 ## Features
 
 - **Product catalog** — Search, category filters, price range, in-stock toggle, sort, grid/list views, and pagination
@@ -93,7 +95,11 @@ Shared infrastructure lives in `config/db.ts` (MongoDB connection) and `auth/jwt
 
 ```
 shopflow/
+├── DEPLOYMENT.md             # Production deploy guide (S3, EC2, CI/CD)
 ├── package.json              # Root workspace scripts
+├── .github/workflows/
+│   ├── frontend.yml          # Deploy client to S3 on push to main
+│   └── backend.yml           # Deploy server to EC2 on push to main
 ├── client/
 │   ├── src/
 │   │   ├── api/              # apiClient, auth/products API, toast bridge
@@ -175,8 +181,17 @@ npm run seed
 
 This clears and re-inserts seed data:
 
-- **2 users** — `admin@shopflow.com`, `shopper@shopflow.com` (password: `password123`)
 - **18 products** — across categories like Electronics, Footwear, Apparel, and Home
+- **2 demo users** — see credentials below (there is no sign-up API)
+
+**Demo login credentials** (use these after seeding):
+
+| Name | Email | Password | Notes |
+| ---- | ----- | -------- | ----- |
+| Demo Shopper | `shopper@shopflow.com` | `password123` | Normal shopping / checkout |
+| Admin User | `admin@shopflow.com` | `password123` | Same UI; can use product write APIs |
+
+Each user has their **own cart**, stored on the server and **synced across browsers** when logged in as the same account.
 
 ### 4. Run in development
 
@@ -200,14 +215,9 @@ curl http://localhost:5000/health
 
 ### 5. Sign in
 
-Open http://localhost:3000 — unauthenticated users are redirected to `/login`.
+Open http://localhost:3000 — unauthenticated users are redirected to `/login`. Use the [demo credentials](#3-seed-the-database) from step 3.
 
-| Email                  | Password      | Role        |
-| ---------------------- | ------------- | ----------- |
-| `shopper@shopflow.com` | `password123` | Demo shopper |
-| `admin@shopflow.com`   | `password123` | Admin user  |
-
-After login, browse products, add items to your cart, and visit `/checkout` to review the order summary.
+After login, browse products, add items to your cart, and visit `/checkout` to review the order summary. For production testing, see [DEPLOYMENT.md](./DEPLOYMENT.md#demo-accounts-no-sign-up-api).
 
 ## Client Routes
 
@@ -281,51 +291,33 @@ Workspace-specific scripts are also available, e.g. `npm run dev --workspace=cli
 | `password` | string | yes (hashed) |
 | `name`     | string | yes          |
 
-## Production Build
+## Production & deployment
+
+ShopFlow is deployed with:
+
+- **Frontend** — Amazon S3 (static website hosting)
+- **Backend** — Amazon EC2 with PM2
+- **CI/CD** — GitHub Actions (`.github/workflows/frontend.yml` and `backend.yml`)
+
+Pushes to `main` automatically deploy when `client/**` or `server/**` change.
+
+See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for:
+
+- One-time EC2, S3, and IAM setup
+- Environment variables and CORS
+- GitHub Actions secrets
+- Demo accounts (no sign-up endpoint) and per-user cross-browser cart
+- Manual deploy commands
+- Troubleshooting
+
+Quick production build (local):
 
 ```bash
 npm run build:server
-npm run build:client
+VITE_API_URL=http://your-ec2-public-ip:5000 npm run build:client
 ```
 
-1. Set production environment variables on the server host (`MONGO_URI`, `JWT_SECRET`, `PORT`).
-2. Start the API: `npm run start:server`.
-3. Serve `client/dist` with any static file host (S3, Nginx, Vercel, Netlify, etc.), ensuring `VITE_API_URL` pointed to the production API **at build time**.
-
-> **Note:** `VITE_*` variables are embedded during the client build. Rebuild the client if the API URL changes.
-
-### CORS (S3 frontend + EC2 API)
-
-The backend uses the [`cors`](https://www.npmjs.com/package/cors) package in `server/src/app.ts`. Browsers block cross-origin API calls unless the server explicitly allows the frontend origin — `curl` and direct URL visits are not affected.
-
-**Default (no `CORS_ORIGIN` set):** all origins are allowed. Use this when your React app is on S3 and your API is on EC2.
-
-**Optional lock-down:** set `CORS_ORIGIN` in `server/.env` to your S3 website URL:
-
-```env
-CORS_ORIGIN=http://your-bucket.s3-website-us-east-1.amazonaws.com
-```
-
-Multiple origins: comma-separated.
-
-**Deploy API changes on EC2 (with PM2):**
-
-```bash
-cd ~/shopflow
-git pull
-npm install
-npm run build:server
-pm2 restart shopflow-api
-```
-
-**Client build for production** — set the API URL before building:
-
-```env
-# client/.env.local (or CI env)
-VITE_API_URL=http://your-ec2-public-ip:5000
-```
-
-Then `npm run build:client` and upload `client/dist` to S3.
+> `VITE_*` variables are embedded at client build time. Rebuild the frontend if the API URL changes.
 
 ## Implementation Status
 
