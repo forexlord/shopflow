@@ -155,6 +155,7 @@ JWT_SECRET=your_secret_key_here
 | `PORT`       | API listen port (default `5000`)    |
 | `MONGO_URI`  | MongoDB connection string           |
 | `JWT_SECRET` | Secret used to sign and verify JWTs |
+| `CORS_ORIGIN` | Optional. Comma-separated allowed frontend URLs. Omit to allow all origins (needed for S3 → EC2). |
 
 **Client** — create `client/.env.local`:
 
@@ -289,9 +290,42 @@ npm run build:client
 
 1. Set production environment variables on the server host (`MONGO_URI`, `JWT_SECRET`, `PORT`).
 2. Start the API: `npm run start:server`.
-3. Serve `client/dist` with any static file host (Nginx, Vercel, Netlify, etc.), ensuring `VITE_API_URL` pointed to the production API **at build time**.
+3. Serve `client/dist` with any static file host (S3, Nginx, Vercel, Netlify, etc.), ensuring `VITE_API_URL` pointed to the production API **at build time**.
 
 > **Note:** `VITE_*` variables are embedded during the client build. Rebuild the client if the API URL changes.
+
+### CORS (S3 frontend + EC2 API)
+
+The backend uses the [`cors`](https://www.npmjs.com/package/cors) package in `server/src/app.ts`. Browsers block cross-origin API calls unless the server explicitly allows the frontend origin — `curl` and direct URL visits are not affected.
+
+**Default (no `CORS_ORIGIN` set):** all origins are allowed. Use this when your React app is on S3 and your API is on EC2.
+
+**Optional lock-down:** set `CORS_ORIGIN` in `server/.env` to your S3 website URL:
+
+```env
+CORS_ORIGIN=http://your-bucket.s3-website-us-east-1.amazonaws.com
+```
+
+Multiple origins: comma-separated.
+
+**Deploy API changes on EC2 (with PM2):**
+
+```bash
+cd ~/shopflow
+git pull
+npm install
+npm run build:server
+pm2 restart shopflow-api
+```
+
+**Client build for production** — set the API URL before building:
+
+```env
+# client/.env.local (or CI env)
+VITE_API_URL=http://your-ec2-public-ip:5000
+```
+
+Then `npm run build:client` and upload `client/dist` to S3.
 
 ## Implementation Status
 
