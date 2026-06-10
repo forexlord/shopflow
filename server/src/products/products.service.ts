@@ -121,7 +121,7 @@ export class ProductsService {
     if (dto.stock !== undefined) updates.stock = dto.stock;
     if (dto.popularity !== undefined) updates.popularity = dto.popularity;
 
-    return Product.findByIdAndUpdate(id, updates, { new: true });
+    return Product.findByIdAndUpdate(id, updates, { returnDocument: "after" });
   }
 
   async remove(id: string): Promise<IProduct | null> {

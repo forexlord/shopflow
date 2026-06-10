@@ -73,7 +73,7 @@ export class CartService {
     const cart = await Cart.findOneAndUpdate(
       { userId },
       { items: validated },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
     );
 
     return toCartItems(cart.items);
